@@ -1,10 +1,10 @@
-import { randomUUID } from "crypto";
-import type { Game } from "./game.types";
-import { GameStatus } from "./game.types";
-import type { Player } from "./player.types";
-import { createGrid } from "@/utils";
+import { randomUUID } from 'crypto';
+import type { Game } from './game.types';
+import { GameStatus } from './game.types';
+import type { Player } from './player.types';
+import { createGrid } from '@/utils';
 
-import { games, joinableGames } from "@/db";
+import { games, joinableGames } from '@/db';
 
 export const getGames = () => [...games].map(([_id, game]) => game);
 
@@ -24,8 +24,6 @@ export const createGame = (player: Player) => {
   joinableGames.add(gameId);
   return game;
 };
-
-const updateGamePlayerReady = (gameId: string) => {};
 
 export const joinGame = (gameId: string, player: Player) => {
   const game = getGameById(gameId);

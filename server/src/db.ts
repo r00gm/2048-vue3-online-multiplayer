@@ -1,5 +1,5 @@
-import { Game } from "@/services/game.types";
-import { Player } from "@/services/player.types";
+import { Game } from '@/services/game.types';
+import { Player } from '@/services/player.types';
 
 /**
  * Our tiny "DB" just for demo pourposes

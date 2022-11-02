@@ -1,6 +1,6 @@
 export enum PlayerStatus {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
 }
 
 export type Player = {
