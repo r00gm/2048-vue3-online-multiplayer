@@ -11,6 +11,9 @@ export const getGames = () => [...games].map(([_id, game]) => game);
 
 export const getGameById = (gameId: string) => games.get(gameId);
 
+export const getGamesByPlayer = (player: Player) =>
+  getGames().filter(game => game.players.find(({ id }) => id === player.id));
+
 export const createGame = (player: Player) => {
   const gameId = randomUUID();
   const game: Game = {

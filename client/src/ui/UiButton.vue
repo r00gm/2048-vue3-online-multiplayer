@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from 'vue';
-
 const props = defineProps({
   label: {
     type: [String, Number],

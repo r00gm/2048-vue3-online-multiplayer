@@ -1,6 +1,13 @@
 import { createApp } from '@/app';
 import { createSocket } from '@/socket';
-import { deleteGame, getJoinableGames, joinGame, createGame, getGameById } from '@/services/game';
+import {
+  deleteGame,
+  getJoinableGames,
+  joinGame,
+  createGame,
+  getGameById,
+  getGamesByPlayer,
+} from '@/services/game';
 import { createPlayer, deletePlayer, getPlayerById } from '@/services/player';
 import { GameStatus } from '@/services/game.types';
 
@@ -40,12 +47,14 @@ io.on('connect', socket => {
 
   // join/create a game
   socket.on('join:game', async () => {
-    const [gameId] = getJoinableGames();
     const player = getPlayerById(socket.id);
-
-    // obtener las rooms del cara poya para evitar duplicados
-
     if (!player) return;
+
+    // log player off any previous games
+    const playerGames = getGamesByPlayer(player);
+    playerGames.forEach(game => socket.leave(game.id));
+
+    const [gameId] = getJoinableGames();
 
     const game = gameId ? joinGame(gameId, player) : createGame(player);
 

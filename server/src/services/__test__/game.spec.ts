@@ -1,6 +1,13 @@
 import { games, joinableGames } from '@/db';
 import * as db from '@/db';
-import { getGames, createGame, getGameById, joinGame, deleteGame } from '@/services/game';
+import {
+  getGames,
+  createGame,
+  getGameById,
+  joinGame,
+  deleteGame,
+  getGamesByPlayer,
+} from '@/services/game';
 import type { Game } from '../game.types';
 import type { Player } from '@/services/player.types';
 
@@ -70,5 +77,17 @@ describe('game service', () => {
     deleteGame(game.id);
     expect(games.size).toBe(0);
     expect(joinableGames.size).toBe(0);
+  });
+
+  it('should return all the player games', () => {
+    const game1 = createGame(dummyPlayer);
+    createGame(dummyPlayer2);
+    const game3 = createGame(dummyPlayer);
+    createGame(dummyPlayer2);
+    createGame(dummyPlayer2);
+    expect(games.size).toBe(5);
+    expect(joinableGames.size).toBe(5);
+    expect(getGamesByPlayer(dummyPlayer).length).toBe(2);
+    expect(getGamesByPlayer(dummyPlayer)).toStrictEqual([game1, game3]);
   });
 });
