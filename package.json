@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "description": "",
+  "version": "1.0.0",
+  "main": "server/dist/index.j",
+  "scripts": {
+    "postinstall": "npm run install:server && npm run install:client",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "start": "node server/dist/index.js"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "author": "",
+  "license": "ISC"
+}
