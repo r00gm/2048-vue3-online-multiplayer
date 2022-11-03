@@ -4,7 +4,9 @@ import history from 'connect-history-api-fallback';
 
 export const createApp = () => {
   const PRODUCTION = process.env.NODE_ENV === 'production';
-  const APP_PATH = join(__dirname, '../client/dist');
+  const APP_PATH = join(__dirname, '../../client/dist');
+
+  console.log(APP_PATH);
 
   const app = express();
 
