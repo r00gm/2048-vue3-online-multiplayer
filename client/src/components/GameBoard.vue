@@ -1,5 +1,5 @@
 <template>
-  <div class="game-board flex relative">
+  <div class="game-board flex relative" v-touch:swipe="swipeHandler">
     <div class="overlay" v-if="overlay">
       <slot name="overlay"> </slot>
     </div>
@@ -99,6 +99,22 @@ const addRandomTile = (value: number) => {
   const { x, y } = getRandomEmptyCoordinate(emptyTiles.value);
 
   grid.value[y][x] = value;
+};
+
+// add suport to mobile devices
+const swipeHandler = (vector: string) => {
+  const types: {
+    [key: string]: string;
+  } = {
+    left: 'ArrowLeft',
+    right: 'ArrowRight',
+    top: 'ArrowUp',
+    bottom: 'ArrowDown',
+  };
+
+  const event = { key: types[vector] } as KeyboardEvent;
+
+  keyDownHandler(event);
 };
 
 /**
