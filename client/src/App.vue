@@ -21,7 +21,16 @@ import TheNav from '@/components/TheNav.vue';
       </template>
     </RouterView>
     <template v-slot:footer>
-      <div class="py-2 bg-gray-700 text-center text-white">Made with ♥</div>
+      <div class="py-2 bg-gray-700 text-center text-white">
+        Made with <span class="text-red-500">♥</span>
+        Visit the Github repository
+        <a
+          class="text-red-500 ml-1 underline"
+          href="https://github.com/r00gm/2048-vue3-online-multiplayer"
+          target="_blank"
+          >Source code</a
+        >
+      </div>
     </template>
     <!-- <RouterView /> -->
   </FixedHeaderAndFooterLayout>
