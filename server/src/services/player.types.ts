@@ -6,5 +6,4 @@ export enum PlayerStatus {
 export type Player = {
   id: string;
   username: string;
-  status: PlayerStatus;
 };

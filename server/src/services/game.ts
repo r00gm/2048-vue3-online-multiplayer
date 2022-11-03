@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 import type { Game } from './game.types';
 import { GameStatus } from './game.types';
 import type { Player } from './player.types';
@@ -14,11 +15,14 @@ export const createGame = (player: Player) => {
   const gameId = randomUUID();
   const game: Game = {
     id: gameId,
+    name: uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+    }),
     requiredPlayers: 2,
-    readyPlayers: [],
+    playersReady: [],
     players: [player],
-    status: GameStatus.WAITING,
-    grid: createGrid({ rows: 4, cols: 4 }),
+    status: GameStatus.WAITING_FOR_PLAYERS,
+    board: createGrid({ rows: 4, cols: 4 }),
   };
   games.set(gameId, game);
   joinableGames.add(gameId);
@@ -32,7 +36,7 @@ export const joinGame = (gameId: string, player: Player) => {
 
   game.players.push(player);
 
-  if (game.players.length === game.requiredPlayers - 1) {
+  if (game.players.length === game.requiredPlayers) {
     joinableGames.delete(gameId);
   }
   return game;

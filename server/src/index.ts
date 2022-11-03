@@ -34,7 +34,8 @@ io.on('connect', socket => {
 
   // inform user rooms that the user has loggedout/timedout/left
   socket.on('disconnecting', () => {
-    socket.rooms.forEach(room => io.in(room).emit('player:left', socket.id));
+    const player = getPlayerById(socket.id);
+    socket.rooms.forEach(room => io.in(room).emit('player:disconnected', player));
   });
 
   // join/create a game
@@ -42,23 +43,31 @@ io.on('connect', socket => {
     const [gameId] = getJoinableGames();
     const player = getPlayerById(socket.id);
 
+    // obtener las rooms del cara poya para evitar duplicados
+
     if (!player) return;
 
     const game = gameId ? joinGame(gameId, player) : createGame(player);
 
     await socket.join(game.id);
     socket.emit('game:joined', game);
-    socket.to(game.id).emit('game:player:joined', player);
+    socket.to(game.id).emit('player:connected', player);
+  });
+
+  socket.on('leave:game', gameID => {
+    const player = getPlayerById(socket.id);
+    socket.to(gameID).emit('player:disconnected', player);
+    socket.leave(gameID);
   });
 
   // start the game when all players are ready
   socket.on('player:ready', gameID => {
     const game = getGameById(gameID);
-    game?.readyPlayers.push(socket.id);
+    game?.playersReady.push(socket.id);
 
-    if (game?.readyPlayers.length === game?.requiredPlayers) {
+    if (game?.playersReady.length === game?.requiredPlayers) {
       //start the game
-      socket.to(gameID).emit('game:updated', { status: GameStatus.READY });
+      io.sockets.in(gameID).emit('game:updated', { status: GameStatus.STARTED });
     }
   });
 
@@ -68,16 +77,17 @@ io.on('connect', socket => {
     const payload = { winner: winner, status: GameStatus.FINISHED };
 
     // game over
-    socket.to(gameID).emit('game:updated', payload);
+    io.sockets.in(gameID).emit('game:updated', payload);
   });
 
   // broadcast player score to all room members
-  socket.on('update:score', ({ gameID, score }) => {
+  socket.on('update:score', ({ gameID, score, highestTile }) => {
     socket.to(gameID).emit('score:updated', { score, playerId: socket.id });
-    if (score != 2048) return;
+    console.log('update:score', { gameID, score, highestTile });
+    if (highestTile !== 2048) return;
 
     // game over
-    socket.to(gameID).emit('game:updated', {
+    io.sockets.in(gameID).emit('game:updated', {
       winner: getPlayerById(socket.id),
       status: GameStatus.FINISHED,
     });

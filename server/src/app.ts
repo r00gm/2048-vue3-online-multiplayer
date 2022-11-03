@@ -1,7 +1,11 @@
+import { join } from 'node:path';
 import express from 'express';
 import history from 'connect-history-api-fallback';
 
 export const createApp = () => {
+  const PRODUCTION = process.env.NODE_ENV === 'production';
+  const APP_PATH = join(__dirname, '../client/dist');
+
   const app = express();
 
   app.use(
@@ -24,6 +28,9 @@ export const createApp = () => {
       ],
     })
   );
+
+  // Only serve the App in production
+  if (PRODUCTION) app.use(express.static(APP_PATH));
 
   return app;
 };
